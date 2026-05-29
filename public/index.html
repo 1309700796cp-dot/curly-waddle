@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chanping Tools | 桌面倒计时浮窗</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #111827;
+      --muted: #667085;
+      --line: #e5e7eb;
+      --panel: rgba(255, 255, 255, 0.78);
+      --accent: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(219, 234, 254, 0.95), transparent 30%),
+        radial-gradient(circle at 88% 16%, rgba(255, 237, 213, 0.9), transparent 32%),
+        linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px;
+    }
+
+    main {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero,
+    .preview {
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+      border-radius: 22px;
+    }
+
+    .hero {
+      padding: 38px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 22px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .primary {
+      color: #ffffff;
+      background: var(--accent);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+    }
+
+    .secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.82);
+      border-color: var(--line);
+    }
+
+    .steps {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid var(--line);
+      color: #374151;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .preview {
+      min-height: 360px;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .widget {
+      width: 250px;
+      height: 126px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fed7aa, #fbcfe8);
+      border: 1px solid rgba(251, 146, 60, 0.42);
+      box-shadow: 0 18px 46px rgba(15, 23, 42, 0.16);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 10px;
+      position: relative;
+    }
+
+    .minus {
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date span:first-child {
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .date strong {
+      font-size: 42px;
+      line-height: 0.95;
+    }
+
+    .date span:last-child {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .count {
+      padding-top: 10px;
+    }
+
+    .count .label {
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .count .days {
+      color: #6b7280;
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .count .time {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .count .time b {
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .count .ms {
+      color: #2563eb;
+      font-size: 18px;
+    }
+
+    .tab {
+      position: absolute;
+      right: 0;
+      top: 66px;
+      width: 42px;
+      height: 38px;
+      border-radius: 19px 0 0 19px;
+      background: #111827;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 820px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Windows 桌面小工具</div>
+      <h1>桌面倒计时浮窗</h1>
+      <p class="lead">
+        一个轻量的 Windows 桌面浮窗：显示日期、毕业倒计时、法定节假日提醒，支持右侧小浮窗、背景主题和天气动效。
+      </p>
+
+      <div class="actions">
+        <a class="button primary" href="/downloads/DesktopCountdownWidget-v1.0.0.zip" download>下载 Windows 版</a>
+        <a class="button secondary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub 项目</a>
+      </div>
+
+      <div class="steps">
+        使用方式：下载 zip 后解压，双击 <strong>Start-DesktopCalendar.cmd</strong> 启动；如需开机自启动，双击 <strong>Enable-Startup.cmd</strong>。
+      </div>
+    </section>
+
+    <section class="preview" aria-label="浮窗预览">
+      <div class="widget">
+        <div class="minus">-</div>
+        <div class="date">
+          <span>5月</span>
+          <strong>29</strong>
+          <span>星期五</span>
+        </div>
+        <div class="count">
+          <div class="label">毕业倒计时</div>
+          <div class="days">367天</div>
+          <div class="time">14:59:<b>59</b><span class="ms">.877</span></div>
+        </div>
+      </div>
+      <div class="tab">367</div>
+    </section>
+  </main>
+</body>
+</html>
