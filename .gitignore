@@ -1,0 +1,6 @@
+DesktopCalendarFloat.config.json
+*.log
+Thumbs.db
+.DS_Store
+.wrangler/
+node_modules/
